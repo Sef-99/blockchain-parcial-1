@@ -5,14 +5,16 @@ import poseidon
 import hashlib
 
 class MerkleTree:
-    def __init__(self, transactions):
+    def __init__(self, transactions, poseidon_hash):
         self.transactions = transactions
+        self.poseidon_hash = poseidon_hash
         self.tree = self._build_tree()
+
 
     def _hash_transaction(self, transaction):
         # Hash function (using SHA-256 for demonstration)
         # return hashlib.sha256(transaction.encode()).hexdigest()
-        return poseidon.hash
+        return int(self.poseidon_hash.run_hash(transaction))
 
     def _build_tree(self):
         if len(self.transactions) == 0:
@@ -48,28 +50,3 @@ class MerkleTree:
             index //= 2
             current_level = self.tree[i + 1]
         return proof
-
-# Example usage:
-
-
-
-def main():
-    print('Hola')
-    transactions = ["Transaction1", "Transaction2", "Transaction3", "Transaction4"]
-    merkle_tree = MerkleTree(transactions)
-
-    print("Merkle Tree:")
-    for level in merkle_tree.tree:
-        print(level)
-
-    print("\nRoot Hash:", merkle_tree.get_root())
-
-    transaction_to_prove = "Transaction2"
-    proof = merkle_tree.get_proof(transaction_to_prove)
-    print("\nProof for", transaction_to_prove, ":", proof)
-
-    return 0
-
-if __name__ == '__main__':
-    main()
-    sys.exit(0)
